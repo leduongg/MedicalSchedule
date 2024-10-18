@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "Ag14jGXyF2ZrW01H6MySt4icsYRz29FGrE8AblWYJN8=",
+  "Source": "MedicalScheduleAPI",
+  "BasePath": "_content/MedicalScheduleAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

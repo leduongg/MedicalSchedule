@@ -1,0 +1,499 @@
+﻿@page
+@model MedicalScheduleWeb.Pages.Admin.ManagePatientModel
+@{
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Manager Patient</title>
+    <link rel="stylesheet" type="text/css" href="/css/maccount.css">
+</head>
+<body>
+    <h1>Manager Patient</h1>
+    <div class="float-right">
+        <div class="input-group">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+        </div>
+
+    </div>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPatientModal">
+        Add New Patient
+    </button>
+    <div id="listPatient">
+        <table id="accountTable">
+            <thead>
+                <tr>
+                    <th>FullName</th>
+                    <th>Date Of Birth</th>
+                    <th>Gender</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="pagination" class="d-flex justify-content-center">
+        <ul class="pagination">
+            <li class="page-item" id="prevPage">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <li class="page-item" id="nextPage">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <a href="/Admin/Dashboard" class="back-to-dashboard">Back to Dashboard</a>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // jQuery code for CRUD operations
+        $(document).ready(function () {
+            var currentPage = 1;
+            var totalPages = 0;
+
+            function loadPage(objectType, page, pageSize) {
+                $.ajax({
+                    url: 'https://localhost:7239/api/Page',
+                    type: 'GET',
+                    data: { objectType: objectType, page: page, pageSize: pageSize },
+                    success: function (data) {
+                        $('#listPatient tbody').empty();
+                        data.forEach(function (patient) {
+                            var row = '<tr>' +
+                                '<td>' + patient.fullName + '</td>' +
+                                '<td>' + patient.dateOfBirth + '</td>' +
+                                '<td>' + patient.gender + '</td>' +
+                                '<td>' + patient.address + '</td>' +
+                                '<td>' + patient.email + '</td>' +
+                                '<td>' + patient.phone + '</td>' +
+                                '<td>' +
+                                '<button class="edit-btn btn btn-secondary" data-id="' + patient.patientId + '">Edit</button>' +
+                                '<button class="delete-btn btn btn-danger" data-id="' + patient.patientId + '">Delete</button>' +
+                                '</td>' +
+                                '</tr>';
+                            $('#listPatient tbody').append(row);
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+
+            // Function để tạo và hiển thị các nút trang
+            function displayPagination() {
+                $('#pagination').empty(); // Xóa các nút trang hiện tại
+                var $ul = $('<ul class="pagination"></ul>');
+                // Thêm nút trang trước
+                $ul.append('<li class="page-item" id="prevPage"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>');
+                // Thêm các nút trang
+                for (var i = 1; i <= totalPages; i++) {
+                    $ul.append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
+                }
+                // Thêm nút trang tiếp theo
+                $ul.append('<li class="page-item" id="nextPage"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>');
+                $('#pagination').append($ul);
+            }
+
+            // Thực hiện load dữ liệu trang đầu tiên khi trang web được tải
+            loadPage('Patient', 1, 5);
+
+            // Xử lý khi nhấp vào nút phân trang trước
+            $(document).on('click', '#prevPage', function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadPage('Patient', currentPage, 5);
+                }
+            });
+
+            // Xử lý khi nhấp vào nút phân trang tiếp theo
+            $(document).on('click', '#nextPage', function () {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadPage('Patient', currentPage, 5);
+                }
+            });
+
+            // Xử lý khi nhấp vào nút trang cụ thể
+            $(document).on('click', '.page-link', function () {
+                var page = parseInt($(this).text()); // Lấy số trang từ nội dung của nút
+                if (!isNaN(page)) { // Kiểm tra nếu là một số
+                    currentPage = page;
+                    loadPage('Patient', currentPage, 5);
+                }
+            });
+
+            // Lấy số lượng trang trước khi hiển thị nút trang
+            $.ajax({
+                url: 'https://localhost:7239/api/Page/PageCount?objectType=Patient&pageSize=5',
+                type: 'GET',
+                success: function (data) {
+                    totalPages = data;
+                    displayPagination(); // Hiển thị các nút trang sau khi đã biết tổng số trang
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+
+
+            // Add Patient Ajax
+            $('#addPatientForm').submit(function (e) {
+                e.preventDefault();
+                var formData = {
+                    fullName: $('#fullName').val(),
+                    dateOfBirth: $('#dateOfBirth').val(), 
+                    gender: $('#gender').val(), 
+                    address: $('#address').val(),
+                    email: $('#email').val(),
+                    phone: $('#phone').val(),
+                };
+
+                console.log(formData);
+
+                var defaultUsername = 'benhnhan';
+                var counter = 1;
+                var newUsername = defaultUsername + counter;
+
+                // Hàm kiểm tra xem username đã tồn tại chưa
+                function checkUsernameExists(username, counter) {
+                    // Gửi yêu cầu AJAX để kiểm tra username
+                    $.ajax({
+                        url: 'https://localhost:7239/api/Account/CheckUsernameExists?username=' + username,
+                        type: 'GET',
+                        success: function (exists) {
+                            console.log(exists);
+                            if (exists) {
+                                // Nếu username đã tồn tại, tăng số đếm lên
+                                counter++;
+                                var newUsername = defaultUsername + counter;
+                                checkUsernameExists(newUsername, counter); // Kiểm tra lại username mới
+                            } else {
+                                // Nếu username chưa tồn tại, sử dụng username mới để tạo tài khoản
+                                createAccount(formData, username);
+                            }
+                        },
+                        error: function (error) {
+                            console.error('Error checking username:', error);
+                        }
+                    });
+                }
+
+                // Hàm tạo tài khoản
+                function createAccount(formData, username) {
+                    var accountData = {
+                        username: username,
+                        password: '123456',
+                        userType: 'Patient'
+                    };
+                    console.log(accountData);
+                    // Gửi yêu cầu AJAX để tạo tài khoản
+                    $.ajax({
+                        url: 'https://localhost:7239/api/Account/CreateAccount',
+                        type: 'POST',
+                        data: JSON.stringify(accountData),
+                        contentType: 'application/json',
+                        success: function (response) {
+                            // Nếu tạo tài khoản thành công, tiếp tục với việc tạo bệnh nhân
+                            console.log(response);
+                            createPatient(formData, response.userId);
+                        },
+                        error: function (error) {
+                            console.error('Error creating account:', error);
+                        }
+                    });
+                }
+
+                // Hàm tạo bệnh nhân
+                function createPatient(formData, userId) {
+                    var formData = {
+                        userId: userId,
+                        fullName: formData.fullName,
+                        dateOfBirth: formData.dateOfBirth,
+                        gender: formData.gender,
+                        address: formData.address,
+                        email: formData.email,
+                        phone: formData.phone,
+                    };
+                    console.log(formData);
+                    // Gửi yêu cầu AJAX để tạo bệnh nhân
+                    $.ajax({
+                        url: 'https://localhost:7239/api/Patient/CreatePatient',
+                        type: 'POST',
+                        data: JSON.stringify(formData),
+                        contentType: 'application/json',
+                        success: function (response) {
+                            // Nếu tạo bệnh nhân thành công, cập nhật giao diện người dùng
+                            loadPage('Patient', 1, 5);
+                            // Đóng modal thêm bệnh nhân
+                            $('#addPatientModal').modal('hide');
+                        },
+                        error: function (error) {
+                            console.error('Error creating patient:', error);
+                        }
+                    });
+                }
+                loadPage('Patient', 1, 5);
+                checkUsernameExists(newUsername, counter);
+            });
+
+            // Delete button
+            $(document).on('click', '.delete-btn', function () {
+                var patientId = $(this).data('id');
+                $('#confirmDeleteModal').modal('show'); // Hiển thị modal xác nhận
+                $('#confirmDeleteBtn').data('id', patientId); // Lưu trữ ID của tài khoản vào nút xác nhận
+            });
+            $(document).on('click', '#confirmDeleteBtn', function () {
+                var patientId = $(this).data('id');
+                // Thực hiện yêu cầu xóa tài khoản với accountId đã lưu trữ
+                $.ajax({
+                    url: 'https://localhost:7239/api/Patient/DeletePatient/' + patientId,
+                    type: 'DELETE',
+                    success: function (response) {
+                        // Reload accounts after successful deletion
+                        loadPage('Patient', 1, 5);
+                        // Đóng modal sau khi xóa thành công
+                        $('#confirmDeleteModal').modal('hide');
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+                loadPage('Patient', 1, 5);
+            });
+
+            $('#searchInput').on('input', function () {
+                var keyword = $(this).val();
+                if (keyword.trim() === '') {
+                    loadPage('Patient', 1, 5);
+                    loadPagination();
+                } else {
+                    searchPatient(keyword); // Corrected function name
+                }
+            });
+            function searchPatient(keyword) {
+                $.ajax({
+                    url: 'https://localhost:7239/api/Patient/Search?keyword=' + keyword,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#listPatient tbody').empty(); // Clear existing data
+                        data.forEach(function (patient) {
+                            var row = '<tr>' +
+                                '<td>' + patient.fullName + '</td>' +
+                                '<td>' + patient.dateOfBirth + '</td>' +
+                                '<td>' + patient.gender + '</td>' +
+                                '<td>' + patient.address + '</td>' +
+                                '<td>' + patient.email + '</td>' +
+                                '<td>' + patient.phone + '</td>' +
+                                '<td>' +
+                                '<button class="edit-btn btn btn-secondary" data-id="' + patient.patientId + '">Edit</button>' +
+                                '<button class="delete-btn btn btn-danger" data-id="' + patient.patientId + '">Delete</button>' +
+                                '</td>' +
+                                '</tr>';
+                            $('#listPatient tbody').append(row);
+                        });
+                        loadPagination();
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+
+            // Edit Patient Ajax
+            function editPatient(patientId, updatedData) {
+                $.ajax({
+                    url: 'https://localhost:7239/api/Patient/UpdatePatient/' + patientId,
+                    type: 'PUT',
+                    data: JSON.stringify(updatedData),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        // Reload page after successful edit
+                        loadPage('Patient', currentPage, 5);
+                        // Đóng modal sau khi chỉnh sửa thành công
+                        $('#editPatientModal').modal('hide');
+                    },
+                    error: function (error) {
+                        console.error('Error editing patient:', error);
+                    }
+                });
+            }
+            // Fill data into edit modal when edit button is clicked
+            $(document).on('click', '.edit-btn', function () {
+                var patientId = $(this).data('id');
+                // Perform AJAX request to get patient details by ID
+                $.ajax({
+                    url: 'https://localhost:7239/api/Patient/GetPatient/' + patientId,
+                    type: 'GET',
+                    success: function (patient) {
+                        // Fill data into modal fields
+                        $('#editFullName').val(patient.fullName);
+                        $('#editDateOfBirth').val(new Date(patient.dateOfBirth).toISOString().split('T')[0]);
+                        $('#editGender').val(patient.gender);
+                        $('#editAddress').val(patient.address);
+                        $('#editEmail').val(patient.email);
+                        $('#editPhone').val(patient.phone);
+                        $('#patientId').val(patientId); // Store patient ID in hidden input
+                        $('#editPatientModal').modal('show'); // Show edit modal
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            // Handle edit confirmation button click
+            $(document).on('click', '#confirmEditBtn', function () {
+                var patientId = $('#patientId').val();
+                var updatedData = {
+                    fullName: $('#editFullName').val(),
+                    dateOfBirth: $('#editDateOfBirth').val(),
+                    gender: $('#editGender').val(),
+                    address: $('#editAddress').val(),
+                    email: $('#editEmail').val(),
+                    phone: $('#editPhone').val()
+                };
+                editPatient(patientId, updatedData); // Call editPatient function
+            });
+
+
+
+            loadPage('Patient', 1, 5);
+        });
+    </script>
+    <!-- Add Patient Modal -->
+    <div class="modal fade" id="addPatientModal" tabindex="-1" role="dialog" aria-labelledby="addPatientModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPatientModalLabel">Add New Patient</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addPatientForm">
+                        <div class="form-group">
+                            <label for="fullName">Full Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateOfBirth">Date of Birth <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender <span class="text-danger">*</span></label>
+                            <select name="gender" id="gender" class="form-control" required>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="address" name="address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="phone" name="phone" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm delete patient</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure want to delete patient?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Patient Modal -->
+    <div class="modal fade" id="editPatientModal" tabindex="-1" role="dialog" aria-labelledby="editPatientModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPatientModalLabel">Edit Patient</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form for editing patient details -->
+                    <form id="editPatientForm">
+                        <div class="form-group">
+                            <label for="editFullName">Full Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="editFullName" placeholder="Enter full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDateOfBirth">Date of Birth <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="editDateOfBirth" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editGender">Gender <span class="text-danger">*</span></label>
+                            <select name="editGender" id="editGender" class="form-control" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editAddress">Address <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="editAddress" placeholder="Enter address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmail">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="editEmail" placeholder="Enter email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPhone">Phone <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="editPhone" placeholder="Enter phone number" required>
+                        </div>
+                        <input type="hidden" id="patientId"> <!-- Hidden input to store patient ID -->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="confirmEditBtn">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

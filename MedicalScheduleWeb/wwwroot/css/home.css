@@ -1,0 +1,212 @@
+﻿/* Reset and base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Header and navigation */
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between; /* Align items to the left and right */
+    align-items: center;
+}
+
+    nav ul {
+        display: flex;
+        justify-content: space-between;
+        padding: 0;
+    }
+
+        nav ul li {
+            list-style: none;
+            margin-right: 10px;
+        }
+
+            nav ul li a {
+                color: #fff;
+                text-decoration: none;
+            }
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+    .nav-links li {
+        margin-right: 50px; /* Khoảng cách giữa các mục */
+    }
+
+.login-btn {
+     margin-left: auto;
+}
+
+.login-btn a {
+    background-color: #fff;
+    color: #333;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+    .login-btn a:hover {
+        background-color: #ddd;
+    }
+
+/* Main content */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+section {
+    margin-bottom: 2rem;
+}
+
+.hero {
+    background-color: #f4f4f4;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.services ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.services li {
+    flex-basis: calc(20% - 1rem);
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.doctors {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.doctor-card {
+    flex-basis: calc(33.33% - 1rem);
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+    .doctor-card img {
+        max-width: 100%;
+        height: auto;
+    }
+
+.testimonials blockquote {
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+.testimonials cite {
+    font-weight: bold;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.contact-info,
+.social-media {
+    flex-basis: calc(50% - 1rem);
+}
+
+    .social-media ul {
+        display: flex;
+        list-style: none;
+    }
+
+    .social-media li {
+        margin-right: 1rem;
+    }
+
+    .social-media img {
+        max-width: 100%;
+        height: auto;
+    }
+.social-icons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+    .social-icons a {
+        margin-left: 20px;
+        color: #000;
+        font-size: 35px;
+    }
+/* Responsive styles */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+    }
+
+        nav ul li {
+            margin-left: 0;
+            margin-bottom: 0.5rem;
+        }
+
+    .services ul {
+        flex-direction: column;
+    }
+
+    .services li {
+        flex-basis: 100%;
+    }
+
+    .doctors {
+        flex-direction: column;
+    }
+
+    .doctor-card {
+        flex-basis: 100%;
+    }
+
+    footer {
+        flex-direction: column;
+    }
+
+    .contact-info,
+    .social-media {
+        flex-basis: 100%;
+        margin-bottom: 1rem;
+    }
+}
+.login-btn {
+    display: flex;
+    align-items: center;
+}
+
+.profile-icon {
+    margin-right: 10px;
+}
+
+#loginBtn {
+    margin-left: auto;
+}

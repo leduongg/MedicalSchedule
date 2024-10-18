@@ -1,0 +1,286 @@
+﻿@page
+@model MedicalScheduleWeb.Pages.Admin.ManageAccountModel
+@{
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Manager Account</title>
+    <link rel="stylesheet" type="text/css" href="/css/maccount.css">
+</head>
+<body>
+    <h1>Manager Account</h1>
+    <div class="float-right">
+        <div class="input-group">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+        </div>
+
+    </div>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addAccountModal">
+        Add New Account
+    </button>
+    <div id="listAccount">
+        <table id="accountTable">
+            <thead>
+                <tr>
+                    <th>UserName</th>
+                    <th>PassWord</th>
+                    <th>UserType</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="pagination" class="d-flex justify-content-center">
+        <ul class="pagination">
+            <li class="page-item" id="prevPage">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <li class="page-item" id="nextPage">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <a href="/Admin/Dashboard" class="back-to-dashboard">Back to Dashboard</a>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // jQuery code for CRUD operations
+        $(document).ready(function () {
+            var currentPage = 1;
+            var totalPages = 0;
+            function loadPage(objectType, page, pageSize) {
+                $.ajax({
+                    url: 'https://localhost:7239/api/Page',
+                    type: 'GET',
+                    data: { objectType: objectType, page: page, pageSize: pageSize },
+                    success: function (data) {
+                        $('#listAccount tbody').empty();
+                        data.forEach(function (account) {
+                            var row = '<tr>' +
+                                '<td>' + account.username + '</td>' +
+                                '<td>' + account.password + '</td>' +
+                                '<td>' + account.userType + '</td>' +
+                                '<td>' +
+                                '<button class="delete-btn btn btn-danger" data-id="' + account.userId + '">Delete</button>' +
+                                '</td>' +
+                                '</tr>';
+                            $('#listAccount tbody').append(row);
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+
+            // Function để tạo và hiển thị các nút trang
+            function displayPagination() {
+                $('#pagination').empty(); // Xóa các nút trang hiện tại
+                var $ul = $('<ul class="pagination"></ul>');
+                // Thêm nút trang trước
+                $ul.append('<li class="page-item" id="prevPage"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>');
+                // Thêm các nút trang
+                for (var i = 1; i <= totalPages; i++) {
+                    $ul.append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
+                }
+                // Thêm nút trang tiếp theo
+                $ul.append('<li class="page-item" id="nextPage"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>');
+                $('#pagination').append($ul);
+            }
+
+            // Thực hiện load dữ liệu trang đầu tiên khi trang web được tải
+            loadPage('Account', 1, 5);
+
+            // Xử lý khi nhấp vào nút phân trang trước
+            $(document).on('click', '#prevPage', function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadPage('Account', currentPage, 5);
+                }
+            });
+
+            // Xử lý khi nhấp vào nút phân trang tiếp theo
+            $(document).on('click', '#nextPage', function () {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadPage('Account', currentPage, 5);
+                }
+            });
+
+            // Xử lý khi nhấp vào nút trang cụ thể
+            $(document).on('click', '.page-link', function () {
+                var page = parseInt($(this).text()); // Lấy số trang từ nội dung của nút
+                if (!isNaN(page)) { // Kiểm tra nếu là một số
+                    currentPage = page;
+                    loadPage('Account', currentPage, 5);
+                }
+            });
+
+            // Lấy số lượng trang trước khi hiển thị nút trang
+            $.ajax({
+                url: 'https://localhost:7239/api/Page/PageCount?objectType=Account&pageSize=5',
+                type: 'GET',
+                success: function (data) {
+                    totalPages = data;
+                    displayPagination(); // Hiển thị các nút trang sau khi đã biết tổng số trang
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+
+
+
+            // Add Account Ajax
+            $('#addAccountForm').submit(function (e) {
+                e.preventDefault();
+                var formData = {
+                    username: $('#username').val(),
+                    password: $('#password').val(),
+                    userType: $('#userType').val(),
+                };
+                console.log(formData);
+                $.ajax({
+                    url: 'https://localhost:7239/api/Account/CreateAccount',
+                    type: 'POST',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        // Reload accounts after successful addition
+                        loadPage('Account', 1, 5);
+                        // Close modal
+                        $('#addAccountModal').modal('hide');
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            $(document).on('click', '.delete-btn', function () {
+                var accountId = $(this).data('id');
+                $('#confirmDeleteModal').modal('show'); // Hiển thị modal xác nhận
+                $('#confirmDeleteBtn').data('id', accountId); // Lưu trữ ID của tài khoản vào nút xác nhận
+            });
+            $(document).on('click', '#confirmDeleteBtn', function () {
+                var accountId = $(this).data('id');
+                // Thực hiện yêu cầu xóa tài khoản với accountId đã lưu trữ
+                $.ajax({
+                    url: 'https://localhost:7239/api/Account/Delete/' + accountId,
+                    type: 'DELETE',
+                    success: function (response) {
+                        // Reload accounts after successful deletion
+                        loadPage('Account', 1, 5);
+                        // Đóng modal sau khi xóa thành công
+                        $('#confirmDeleteModal').modal('hide');
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            $('#searchInput').on('input', function () {
+                var keyword = $(this).val();
+                if (keyword.trim() === '') {
+                    loadPage('Account', 1, 5);
+                } else {
+                    searchAccount(keyword);
+                }
+            });
+            function searchAccount(keyword) {
+                $.ajax({
+                    url: 'https://localhost:7239/api/Account/Search?keyword=' + keyword,
+                    type: 'GET',
+                    success: function (accounts) {
+                        $('#listAccount tbody').empty();
+                        accounts.forEach(function (account) {
+                            var row = '<tr>' +
+                                '<td>' + account.username + '</td>' +
+                                '<td>' + account.password + '</td>' +
+                                '<td>' + account.userType + '</td>' +
+                                '<td>' +
+                                '<button class="delete-btn btn btn-danger" data-id="' + account.userId + '">Delete</button>' +
+                                '</td>' +
+                                '</tr>';
+                            $('#listAccount tbody').append(row);
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+            loadPage('Account', 1, 5);
+        });
+    </script>
+    <!-- Add Account Modal -->
+    <div class="modal fade" id="addAccountModal" tabindex="-1" role="dialog" aria-labelledby="addAccountModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAccountModalLabel">Add New Account</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addAccountForm">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userType">User Type</label>
+                            <select name="userType" id="userType" class="form-control">
+                                <option value="patient">Patient</option>
+                                <option value="doctor">Doctor</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm delete account</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure want to delete account?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

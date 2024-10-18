@@ -1,0 +1,69 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = MedicalScheduleWeb
+build_property.RootNamespace = MedicalScheduleWeb
+build_property.ProjectDir = C:\Users\Le Duong\Desktop\PRN231\MedicalSchedule\MedicalScheduleWeb\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Le Duong\Desktop\PRN231\MedicalSchedule\MedicalScheduleWeb
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/Admin/Clinic.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ2xpbmljLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/Admin/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/Admin/FillMedical.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cRmlsbE1lZGljYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/Admin/ManageAccount.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cTWFuYWdlQWNjb3VudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/Admin/ManageAppointment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cTWFuYWdlQXBwb2ludG1lbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/Admin/ManagePatient.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cTWFuYWdlUGF0aWVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/Admin/ManageRecord.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cTWFuYWdlUmVjb3JkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/Appointment/Appointment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXBwb2ludG1lbnRcQXBwb2ludG1lbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/Home/Home.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZVxIb21lLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/Home/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZVxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/User/Profile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxQcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Le Duong/Desktop/PRN231/MedicalSchedule/MedicalScheduleWeb/Pages/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-lb2w9v5l3n

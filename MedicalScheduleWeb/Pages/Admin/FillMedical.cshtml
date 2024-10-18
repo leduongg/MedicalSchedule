@@ -1,0 +1,156 @@
+﻿@page
+@model MedicalScheduleWeb.Pages.Admin.FillMedicalModel
+@{
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/appointment.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="formbold-main-wrapper">
+        <div class="formbold-form-wrapper">
+            <form action="#" method="POST">
+                <div class="formbold-mb-5">
+                    <label for="date" class="formbold-form-label"> Date Of Record</label>
+                    <input type="text"
+                           name="date"
+                           id="date"
+                           class="formbold-form-input"
+                           readonly />
+                </div>
+                <div class="formbold-mb-5">
+                    <label for="result" class="formbold-form-label"> Result Exam </label>
+                    <input type="text"
+                           name="result"
+                           id="result"
+                           placeholder="Enter result examination medical"
+                           class="formbold-form-input" required />
+                </div>
+                <div class="formbold-mb-5 formbold-pt-3">
+                    <label class="formbold-form-label formbold-form-label-2">
+                        Prescription
+                    </label>
+                    <div class="flex flex-wrap formbold--mx-3">
+                        <div class="w-full sm:w-half formbold-px-3">
+                            <div class="formbold-mb-5 w-full">
+                                <label for="name" class="formbold-form-label">MedicationName</label>
+                                <input type="text"
+                                       name="name"
+                                       id="name"
+                                       placeholder="Enter medication name"
+                                       class="formbold-form-input" required />
+                            </div>
+                        </div>
+                        <div class="w-full sm:w-half formbold-px-3">
+                            <div class="formbold-mb-5 w-full">
+                                <label for="dosage" class="formbold-form-label"> Dosage</label>
+                                <input type="text"
+                                       name="dosage"
+                                       id="dosage"
+                                       placeholder="Enter dosage"
+                                       class="formbold-form-input" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formbold-mb-5">
+                        <label for="frequency" class="formbold-form-label"> Frequency </label>
+                        <input type="text"
+                               name="frequency"
+                               id="frequency"
+                               placeholder="Enter frequency"
+                               class="formbold-form-input" required />
+                    </div>
+                    <div class="formbold-mb-5">
+                        <label for="instructions" class="formbold-form-label"> Instructions  </label>
+                        <input type="text"
+                               name="instructions"
+                               id="instructions"
+                               placeholder="Enter instructions"
+                               class="formbold-form-input"
+                               required />
+                    </div>
+                </div>
+                <div>
+                    <button class="formbold-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Đường link Back to Home -->
+    <a href="/Admin/Dashboard" class="back-to-dashboard" style="float: right; margin-right: 20px;">Back to Dashboard</a>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('form').submit(function (e) {
+                e.preventDefault();
+                var patientId = localStorage.getItem('patientId');
+                var recordDate = new Date($('#date').val()).toISOString();
+                var formData = {
+                    patientId: patientId,
+                    recordDate: recordDate,
+                    medicalHistory: $('#result').val(),
+                };
+                console.log(formData);
+                $.ajax({
+                    type: 'POST',
+                    url: 'https://localhost:7239/api/MedicalRecord/CreateRecord',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        var recordId = response.recordId;
+                        createPrescription(recordId, formData.prescription);
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            function createPrescription(recordId, prescriptionData) {
+                var formData = {
+                    recordId: recordId,
+                    medicationName: $('#name').val(),
+                    dosage: $('#dosage').val(),
+                    frequency: $('#frequency').val(),
+                    instructions: $('#instructions').val()
+
+                };
+                console.log(formData);
+                $.ajax({
+                    type: 'POST',
+                    url: 'https://localhost:7239/api/Prescription/CreatePrescription',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        console.log('Prescription created successfully:', response);
+                    },
+                    error: function (error) {
+                        // Xử lý lỗi nếu có
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        });
+
+
+
+        var dateInput = document.getElementById('date');
+        function updateCurrentDate() {
+            var currentDate = new Date();
+            var currentDay = currentDate.getDate();
+            var currentMonth = currentDate.getMonth() + 1;
+            var currentYear = currentDate.getFullYear();
+            var formattedDate = (currentMonth < 10 ? '0' : '') + currentMonth + "/" + (currentDay < 10 ? '0' : '') + currentDay + "/" + currentYear;
+            dateInput.value = formattedDate;
+        }
+        updateCurrentDate();
+    </script>
+</body>
+</html>

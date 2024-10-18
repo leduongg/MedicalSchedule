@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalScheduleAPI", "MedicalSchedule\MedicalScheduleAPI.csproj", "{B52B5D8D-C5D4-4C9C-A52C-C2E99C69DB3D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalScheduleWeb", "MedicalScheduleWeb\MedicalScheduleWeb.csproj", "{CCDD3D9D-9ACF-4FAE-8DA2-DBD6B8BEE56A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B52B5D8D-C5D4-4C9C-A52C-C2E99C69DB3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B52B5D8D-C5D4-4C9C-A52C-C2E99C69DB3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B52B5D8D-C5D4-4C9C-A52C-C2E99C69DB3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B52B5D8D-C5D4-4C9C-A52C-C2E99C69DB3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCDD3D9D-9ACF-4FAE-8DA2-DBD6B8BEE56A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCDD3D9D-9ACF-4FAE-8DA2-DBD6B8BEE56A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCDD3D9D-9ACF-4FAE-8DA2-DBD6B8BEE56A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCDD3D9D-9ACF-4FAE-8DA2-DBD6B8BEE56A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E89FCB4F-841C-41A0-8304-32226E912424}
+	EndGlobalSection
+EndGlobal

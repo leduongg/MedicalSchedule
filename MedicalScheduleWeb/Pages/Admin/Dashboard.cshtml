@@ -1,0 +1,208 @@
+﻿@page
+@model MedicalScheduleWeb.Pages.Admin.DashboardModel
+@{
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/css/site.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+
+</head>
+
+<body>
+    <div class="dashboard">
+        <aside class="search-wrap">
+            <div class="search">
+                <label for="search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z" /></svg>
+                    <input type="text" id="search">
+                </label>
+            </div>
+
+            <div class="user-actions">
+                <div class="section">
+                    <a href="#" onclick="logout()">Logout</a>
+                </div>
+            </div>
+        </aside>
+
+        <header class="menu-wrap">
+            <figure class="user">
+                <div class="user-avatar">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAh1BMVEX19fUAAAD4+PjW1tb7+/v9/f0EBATz8/OTk5NZWVnn5+fPz8/w8PDt7e3a2trDw8Ph4eE+Pj5dXV2ysrK6urpiYmLJycmpqakpKSmcnJyFhYW/v79RUVGMjIyhoaF8fHxzc3NGRkYTExMeHh4wMDA2NjYRERF1dXVra2tLS0tAQEAxMTEaGhqzE/jZAAAItklEQVR4nO2dC3OiMBDHYcmigiAqRW2rVu3Du+v3/3xHeKs8hERZZvKbuZleq5g/G7K7eayaplAoFAqFQqFQKBQKhUKhUCgUCoVCcQkAsJTw576bI5URMETNMoLlajcej3er5czwpgyB9d0yOQCCu3ydrPVLTn9+VoaGg7cloObvP1NVZvTPTH7iMs8rC4dsScaCD72Jha9h3w3tCI52n436IoNuLRzg0MO0zTHtk/Ua+SteraHZEZh/PbQ0sNEGZUVmvbTTF/LXHowZRxr6pt7cPS/grx4P5mHE19YGjJlMByERtElbA2ZmPHkDcI7gzDtaMLotBnmJAgJjjTb1h3F06NZFE4Wm/u3SVsheBPTFrB3KEnErKI93gHfCfhECkS6aKDT1LVmJMBW2YIxNtJ+O8EfYghxT/0dUIdgS5MUSN4ykRjhIUhhqtPoWUwZ7kyYwzBcpDjbwV6JC3aLXTVlQ2+K2Q9CYjfpWdAWw9jlvHWt6NrSq7WTqp31rK75RSzJwV9fcLbaWeKY21uB7XXMtwE0rfeH9IBaAg1XT1mjsx7dk4vBeZsQU1jnDX4e/hFm1Zr6BmEusnXxaxYMG4KqNwi9iCr8q2hl2zPesu6ET3YjLiXDz5oeEaZ+CbhhVWSJstpc/UMCscclaxvplPHOtqWXvi78llUOBW93brhwbasH2kJtrPdn6nobRqjBoaJ/yW7Oi5BHBr7Tg5uZxAmSOGyxDZoal4cWyEytkYK+UFLJKbzcuHS9Ce/Hl/JLFGBxnN+eF0lBTOZQum1p5o9H5Td87J2XD8/VIGDn3P257M2A22hxJKSxz5nO/y/Q15FkYpfwJr6fyvw9bu9tmEnC+04tQikyx4OTmHzvfcFjnfSQ4Sa9EabKGZUvaCxe4cxO4Vj5vTmgmA2CdjPDvZR6gHWyZjlokbRiI3/Z82pWQDTWWBt4SlqnzVJOSQjjEPcuU0qZsLJVxMUmwReIkZDhpSKNvCdeSBp4lNgqTqeVfSjENvCbjn4xHhyUO8S8lhVluISNrTUPAMyWFWX64lNCqeGLSpJUfgpEoHMtQOI8VksrxNSdRKCVrPUqLHiSCyQi/Fr9U5vEpOfxQYbry5AlfKo3apPhWebB0YaZx2qL5UhuJHV4eWWb+I9wuTOKj20m6fpkmmfmn8JWcZPab1ISwVsjMRRvGEtf6TWmWhsPXB6NbvxUcINIQd0Gsk2paOq//JWjD1FfQ8vecLAkW66bZWrG425ENbpMDTXux01rrOGR7p3fmK19+EknNcZncJ3qdNJT4J777+q773QftS2KiKZtsv8m6+3QpLJNrkNtrEuHEd9/U/c49DCTOSj4A3CfP0GdXA2RTBXOSAjXN0xMjdg2/newCBMcZTjbjduoWceE56QQnoif1RtlcRsXadgNpfkLTVcRkebDe6eDLv7QL0LRgROb139t7jHxVjepTyOHDaewzdm37ab7PhNQOhRvyJWqjnRFhuk6XDWn6woTC5rz1qFVD+SbqWKH4PMhjSRcdTH3SJjtINgrxY6SU9ieUAV6yl8Zss0E0TCnSPto95HsWLA6ezdItbVXvmaV9O8wuH9o6KWBeCuPOARXTYdTU/1GbfyrnM23vfVbEWb57lt7cRRnZwoOp3zOlEQ2/iUJyhywqKG4SXYzqo2iAwsHa1mFCT4CG2YbaME+w68yIfAN/2kVJLYk2cLErfzutbDlbfScCeY+meayygguJn0so636A9p/Cq/YDsiAn76jcPHNfuzIQMGYvCvr07ZAMGMGdXKGGy+/WZvGO/HBwYYje5nJL6mogg0wR5s0vT4kcXzZvtut5xmz3cV2AKECiExcNFA+IlBzqyn71TnH+9y7QP91z7HBDvZxJDTDdN+qbeAN8BDNC529MavV9vQ3KC5YRej0+A3d9uDL+/6HTgQVihHEpWpt/JeY7vRqCm96JwCUwdHfnooc4TsY2RAHrMBLCOwhjGM2y/RWvX7oMvFH38xj9A1GxWSg7MQNZCdqyd/GIh3hx2jAYA83xjGDm+/7bzKoMpUsERu+ZBbZrhc9t+ngSUht6BdRcf/tyOObP2m9tZlgErUKSYX5NXle2g4QKfoaB9DTYFhOhlPE9h7sAsrlEs+BTvva+hSR8JUNrtShRFzczaBgvw7+il65Y3cR3h43R94MJbLqsj1nObn1vQ6e+ANp84/VYaBjQ2B/1umIQ/A8/bmUTw1hgfKyMzdPs8iVg/WgEFlT2zksW/rTEkICa3VxHOeLvkk8RPLm7AgZlY0sFx/PSC31J5AkhTvKd2WuLOryfS3hy0SF0F5dDXx3xq9bn8TIwPMtzbX/z0aZCZvQxX7NnRkE47VplVoQwkWy3JtkZQP9XvD5iW7gh7/Kv4jCHb5t5tsD4Ew8dDvi3BoOWhbrlsmLw4BEn2nr2fAPmfDz2WQTt3NyGh2Lq8+qcRYJAoTLIsjAfV7ydeb+9dtBEoK6/PUgic7/b1SN7HOKnq8pA97f5o5/FIyQy90Sgi8aE7fClSwRn3a+XKMLbEUgdUfluA6n1V2XgyfWL+EJlkEkw9bXUr4rIKnBRQubpNml1rOUi8ZTptNdgu5qWu3QrAUm11uUzlyMw2htJU2G3Uw+3jD6JjaMFJHzdx0hrXQH4eZhSxlOw7vhmsZ4wZYQ20PnLm56BqR+EjThymj+nV4RLRkv45pjHIvytNHBs/pB+ERxO8xJ/ZNmj0H4ONiGvUBdalKorJk8GX0hhqyrqPSF0sh3rl7BpcBQp3k7dGcYIHFgsnLiijECGQXLy4hYBp493bkXomVP3B3FEdPbims5hzSC8Iadz9J3XSCBO5xoMtV8eQ4nOXwk5gLCbY+ofnRXWfksVITqXWGTDcIe6PlEKlULyKIVKIX2UQqWQPkqhUkgfpVAppI9SqBTSRykcvsLuCxeWMQRco/t2YRgGXeXFGoXe/SyG0UqFQqFQKBQKhUKhUCgUCoVCoVA8mP9qoH5V3624+QAAAABJRU5ErkJggg==" alt="Admin Dashboard">
+                </div>
+                <figcaption>
+                    Admin Dashboard
+                </figcaption>
+            </figure>
+
+            <nav>
+                <section class="dicover">
+                    <h3>Management Medical</h3>
+
+                    <ul>
+                        <li>
+                            <a href="/Admin/ManageAccount">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.855 14.365l-1.817 6.36a1.001 1.001 0 0 0 1.517 1.106L12 18.202l5.445 3.63a1 1 0 0 0 1.517-1.106l-1.817-6.36 4.48-3.584a1.001 1.001 0 0 0-.461-1.767l-5.497-.916-2.772-5.545c-.34-.678-1.449-.678-1.789 0L8.333 8.098l-5.497.916a1 1 0 0 0-.461 1.767l4.48 3.584zm2.309-4.379c.315-.053.587-.253.73-.539L12 5.236l2.105 4.211c.144.286.415.486.73.539l3.79.632-3.251 2.601a1.003 1.003 0 0 0-.337 1.056l1.253 4.385-3.736-2.491a1 1 0 0 0-1.109-.001l-3.736 2.491 1.253-4.385a1.002 1.002 0 0 0-.337-1.056l-3.251-2.601 3.79-.631z" /></svg>
+                                Account
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Admin/ManageAppointment">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20.205 4.791a5.938 5.938 0 0 0-4.209-1.754A5.906 5.906 0 0 0 12 4.595a5.904 5.904 0 0 0-3.996-1.558 5.942 5.942 0 0 0-4.213 1.758c-2.353 2.363-2.352 6.059.002 8.412l7.332 7.332c.17.299.498.492.875.492a.99.99 0 0 0 .792-.409l7.415-7.415c2.354-2.353 2.355-6.049-.002-8.416zm-1.412 7.002L12 18.586l-6.793-6.793c-1.562-1.563-1.561-4.017-.002-5.584.76-.756 1.754-1.172 2.799-1.172s2.035.416 2.789 1.17l.5.5a.999.999 0 0 0 1.414 0l.5-.5c1.512-1.509 4.074-1.505 5.584-.002 1.563 1.571 1.564 4.025.002 5.588z" /></svg>
+                                Appointment
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Admin/ManagePatient">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12.707 2.293A.996.996 0 0 0 12 2H3a1 1 0 0 0-1 1v9c0 .266.105.52.293.707l9 9a.997.997 0 0 0 1.414 0l9-9a.999.999 0 0 0 0-1.414l-9-9zM12 19.586l-8-8V4h7.586l8 8L12 19.586z" /><circle cx="7.507" cy="7.505" r="1.505" /></svg>
+                                Patient
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Admin/ManageRecord">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M5.707 19.707L12 13.414l4.461 4.461L14.337 20H20v-5.663l-2.125 2.124L13.414 12l4.461-4.461L20 9.663V4h-5.663l2.124 2.125L12 10.586 5.707 4.293 4.293 5.707 10.586 12l-6.293 6.293z" /></svg>
+                                Medical Record
+                            </a>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="tools">
+                    <h3>Tools</h3>
+
+                    <ul>
+                        <li>
+                            <a href="#" onclick="exportToExcel()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path d="M13 7L11 7 11 11 7 11 7 13 11 13 11 17 13 17 13 13 17 13 17 11 13 11z" />
+                                    <path d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10c5.514,0,10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8 s3.589-8,8-8s8,3.589,8,8S16.411,20,12,20z" />
+                                </svg>
+                                Export file
+                            </a>
+
+                        </li>
+
+                    </ul>
+                </section>
+
+            </nav>
+        </header>
+
+        <main class="content-wrap">
+            <header class="content-head">
+                <h1>Statistics</h1>
+            </header>
+
+            <div class="content">
+                <section class="info-boxes">
+                    <div class="info-box">
+                        <div class="box-icon" id="boxIcon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#007bff" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10c0-5.52-4.48-10-10-10zm0 18c-4.41 0-8-3.59-8-8 0-4.41 3.59-8 8-8 4.41 0 8 3.59 8 8 0 4.41-3.59 8-8 8zm-1-9h2v2h2v2h-2v2h-2v-2h-2v-2h2v-2h2v-2z" />
+                            </svg>
+                        </div>
+
+                        <div class="box-content">
+                            <span class="big" >69</span>
+                            Clinic for patients
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="box-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20 10H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V11a1 1 0 0 0-1-1zm-1 10H5v-8h14v8zM5 6h14v2H5zM7 2h10v2H7z" /></svg>
+                        </div>
+
+                        <div class="box-content">
+                            <span class="big" >132</span>
+                            Appointment
+                        </div>
+                    </div>
+
+                    <div class="info-box active">
+                        <div class="box-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3,21c0,0.553,0.448,1,1,1h16c0.553,0,1-0.447,1-1v-1c0-3.714-2.261-6.907-5.478-8.281C16.729,10.709,17.5,9.193,17.5,7.5 C17.5,4.468,15.032,2,12,2C8.967,2,6.5,4.468,6.5,7.5c0,1.693,0.771,3.209,1.978,4.219C5.261,13.093,3,16.287,3,20V21z M8.5,7.5 C8.5,5.57,10.07,4,12,4s3.5,1.57,3.5,3.5S13.93,11,12,11S8.5,9.43,8.5,7.5z M12,13c3.859,0,7,3.141,7,7H5C5,16.141,8.14,13,12,13z" /></svg>
+                        </div>
+
+                        <div class="box-content">
+                            <span class="big">45</span>
+                            Patient
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="box-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 3C6.486 3 2 6.364 2 10.5c0 2.742 1.982 5.354 5 6.678V21a.999.999 0 0 0 1.707.707l3.714-3.714C17.74 17.827 22 14.529 22 10.5 22 6.364 17.514 3 12 3zm0 13a.996.996 0 0 0-.707.293L9 18.586V16.5a1 1 0 0 0-.663-.941C5.743 14.629 4 12.596 4 10.5 4 7.468 7.589 5 12 5s8 2.468 8 5.5-3.589 5.5-8 5.5z" /></svg>
+                        </div>
+
+                        <div class="box-content">
+                            <span class="big">212</span>
+                            Account
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <script>
+        function exportToExcel() {
+            $.ajax({
+                url: 'https://localhost:7239/api/Export/excel',
+                type: 'GET',
+                dataType: 'json', // Đảm bảo dữ liệu được nhận về dưới dạng JSON
+                success: function (data) {
+                    var excelData = data.excelData;
+                    var bytes = _base64ToArrayBuffer(excelData);
+                    var blob = new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "MyAllocations.xlsx";
+                    link.click();
+                    setTimeout(function () {
+                        window.URL.revokeObjectURL(link.href);
+                    }, 100);
+                },
+                error: function (error) {
+                    JqueryAlert("Lỗi !", error.responseText, false);
+                }
+            });
+        }
+
+        function _base64ToArrayBuffer(base64) {
+            var binary_string = window.atob(base64);
+            var len = binary_string.length;
+            var bytes = new Uint8Array(len);
+            for (var i = 0; i < len; i++) {
+                bytes[i] = binary_string.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+
+        document.getElementById('boxIcon').addEventListener('click', function () {
+            window.location.href = '/Admin/Clinic';
+        });
+
+
+        function logout() {
+            // Xóa token khỏi localStorage
+            localStorage.clear();
+            // Chuyển hướng về trang chủ
+            window.location.href = '/Home/Home';
+        }
+    </script>
+</body>
+
+</html>
+

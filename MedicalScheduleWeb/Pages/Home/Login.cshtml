@@ -1,0 +1,201 @@
+﻿@page
+@model MedicalScheduleWeb.Pages.Home.LoginModel
+@{
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
+
+</head>
+<body>
+    <section class="forms-section">
+        <h1 class="section-title">Medical Schedule</h1>
+        <div class="forms">
+            <div class="form-wrapper is-active">
+                <button type="button" class="switcher switcher-login">
+                    Login
+                    <span class="underline"></span>
+                </button>
+                <form class="form form-login">
+                    <fieldset>
+                        <legend>Please, enter your email and password for login.</legend>
+                        <div class="input-block">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+                        <div class="input-block">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                    </fieldset>
+
+                    <div id="error-message" style="color: red; margin-bottom: 10px;"></div>
+                    <button type="submit" onclick="login(event)" class="btn-login">Login</button>
+                </form>
+            </div>
+            <div class="form-wrapper">
+                <button type="button" class="switcher switcher-signup">
+                    Sign Up
+                    <span class="underline"></span>
+                </button>
+                <form class="form form-signup">
+                    <fieldset>
+                        <legend>Please, enter your email, password and password confirmation for sign up.</legend>
+                        <div class="input-block">
+                            <label for="signup-email">Username</label>
+                            <input id="signup-email" type="text" required>
+                        </div>
+                        <div class="input-block">
+                            <label for="signup-password">Password</label>
+                            <input id="signup-password" type="password" required>
+                        </div>
+                        <div class="input-block">
+                            <label for="signup-password-confirm">Confirm password</label>
+                            <input id="signup-password-confirm" type="password" required>
+                        </div>
+                    </fieldset>
+                    <div id="signup-error" style="color: red; margin-top: 10px; display: none;">Error message will be displayed here</div>
+                    <button type="submit" class="btn-signup">Continue</button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        const switchers = [...document.querySelectorAll('.switcher')];
+
+        switchers.forEach(item => {
+            item.addEventListener('click', function () {
+                // Xóa lớp 'is-active' khỏi tất cả các phần tử cha của các nút chuyển đổi
+                switchers.forEach(item => item.parentElement.classList.remove('is-active'));
+                // Thêm lớp 'is-active' cho phần tử cha của nút chuyển đổi được nhấp vào
+                this.parentElement.classList.add('is-active');
+
+                // Hiển thị hoặc ẩn form tương ứng với nút chuyển đổi được nhấp vào
+                const forms = document.querySelectorAll('.form-wrapper');
+                forms.forEach(form => {
+                    if (form.classList.contains('is-active')) {
+                        form.style.display = 'block';
+                    } else {
+                        form.style.display = 'block';
+                    }
+                });
+            });
+        });
+        function login(event) {
+            event.preventDefault();
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            var data = {
+                Username: username,
+                Password: password
+            };
+
+            // Gọi API login bằng AJAX
+            fetch('https://localhost:7239/api/Authentication/Login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else {
+                        throw new Error('Tên đăng nhập hoặc mật khẩu không chính xác');
+                    }
+                })
+                .then(data => {
+                    // Lấy token từ phản hồi
+                    var token = data.token;
+                    // Lưu token vào Local Storage để sử dụng sau này (ví dụ: để xác thực trong các yêu cầu API khác)
+                    localStorage.setItem('token', token);
+                    // Lấy các claims từ token
+                    var claims = data.claims;
+                    var userIdClaim = claims.find(claim => claim.type === 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier');
+                    var userId = userIdClaim.value;
+                    localStorage.setItem('userId', userId);
+                    // Kiểm tra xem claims có tồn tại và là một mảng không
+                    if (Array.isArray(claims)) {
+                        // Kiểm tra vai trò của người dùng từ các claims
+                        var roleClaim = claims.find(claim => claim.type === 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role');
+
+                        if (roleClaim && roleClaim.value === 'Doctor') {
+                            // Redirect hoặc thực hiện hành động phù hợp với vai trò Doctor
+                            window.location.href = '/Admin/Dashboard';
+                        } else if (roleClaim && roleClaim.value === 'Patient') {
+                            // Redirect hoặc thực hiện hành động phù hợp với vai trò Patient
+                            window.location.href = '/Home/Home';
+                        } else {
+                            // Hiển thị thông báo lỗi nếu vai trò không hợp lệ
+                            throw new Error('Vai trò không hợp lệ');
+                        }
+                    } else {
+                        // Hiển thị thông báo lỗi nếu claims không tồn tại hoặc không phải là một mảng
+                        throw new Error('Tên đăng nhập hoặc mật khẩu không chính xác');
+                    }
+                })
+                .catch(error => {
+                    // Hiển thị thông báo lỗi cho người dùng
+                    document.getElementById('error-message').innerText = error.message;
+                });
+        }
+
+        // Lấy form đăng ký
+        const signUpForm = document.querySelector('.form-signup');
+        // Lấy phần tử để hiển thị thông báo lỗi
+        const errorMessageElement = document.getElementById('signup-error');
+
+        // Xử lý sự kiện khi form đăng ký được gửi đi
+        signUpForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Ngăn chặn hành động mặc định của form
+
+            // Lấy dữ liệu từ form đăng ký
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-password-confirm').value;
+
+            // Kiểm tra xác nhận mật khẩu
+            if (password !== confirmPassword) {
+                errorMessageElement.innerText = "Password and Confirm Password do not match";
+                errorMessageElement.style.display = 'block'; // Hiển thị phần tử thông báo lỗi
+                return;
+            }
+            // Tạo object chứa dữ liệu đăng ký
+            const data = {
+                username: email,
+                password: password
+            };
+
+            fetch('https://localhost:7239/api/Authentication/Register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        alert("Registration successful");
+                        window.location.href = '/Home/Login';
+                    } else {
+                        throw new Error('Registration failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorMessageElement.innerText = "Registration failed. Please try again later.";
+                    errorMessageElement.style.display = 'block'; 
+                });
+        });
+
+
+
+    </script>
+
+</body>
+</html>
